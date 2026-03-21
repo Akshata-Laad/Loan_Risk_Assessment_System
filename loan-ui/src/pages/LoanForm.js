@@ -1,0 +1,92 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import PersonalDetails from "../components/PersonalDetails";
+import FinancialDetails from "../components/FinancialDetails";
+import LoanDetails from "../components/LoanDetails";
+import EmploymentDetails from "../components/EmploymentDetails";
+import bgImage from "../assets/finance-bg.png";
+
+function LoanForm() {
+
+  const [formData, setFormData] = useState({});
+  const navigate = useNavigate();
+
+  const handlePredict = async () => {
+    const requiredFields = [
+      "Monthly_Income",
+      "Loan_Amount",
+      "Loan_Term",
+      "Existing_EMI",
+      "Other_Debt",
+      "Applicant_Income"
+    ];
+
+    for (let field of requiredFields) {
+      if (!formData[field] || formData[field] === "") {
+        alert(field + " is required");
+        return;
+      }
+    }
+    try {
+      const response = await fetch("http://127.0.0.1:5000/predict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+      navigate("/result", { state: data });
+
+    } catch (error) {
+      console.error("FETCH ERROR:", error);
+    }
+  };
+
+  return (
+    <div className="loan-page">
+
+      {/* Header */}
+      <div className="top-banner">
+        <div className="banner-content">
+          <div className="shield-icon">✔</div>
+          <div>
+            <h1>CreditWise AI</h1>
+            <p>Intelligent Loan Risk Assessment System</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Background Section */}
+      <div
+        className="background-section"
+        style={{ backgroundImage: `url(${bgImage})` }}
+      >
+
+        <div className="form-wrapper">
+          <div className="form-card">
+            <h3 className="form-main-heading">Loan Application Form</h3>
+            <p className="form-subheading">
+              Please enter accurate details for AI-based risk evaluation.
+            </p>
+
+            <PersonalDetails formData={formData} setFormData={setFormData} />
+            <EmploymentDetails formData={formData} setFormData={setFormData} />
+            <FinancialDetails formData={formData} setFormData={setFormData} />
+            <LoanDetails formData={formData} setFormData={setFormData} />
+
+            <button className="predict-btn mt-3" onClick={handlePredict}>
+              Predict Loan Status
+            </button>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  );
+}
+
+export default LoanForm;
