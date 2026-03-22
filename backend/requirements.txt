@@ -19,3 +19,4 @@ tzdata==2025.3
 Werkzeug==3.1.6
 xgboost==3.2.0
 gunicorn
+flask-cors==6.0.2

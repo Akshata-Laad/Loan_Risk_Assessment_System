@@ -28,7 +28,7 @@ function LoanForm() {
       }
     }
     try {
-      const response = await fetch("https://loan-risk-assessment-system-backend.onrender.com/", {
+      const response = await fetch("https://loan-risk-assessment-system-backend.onrender.com/predict", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
