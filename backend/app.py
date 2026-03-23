@@ -60,7 +60,9 @@ def predict():
             print("RAW PROBA:", model.predict_proba(features))
             print("========================================")
 
-        prob = model.predict_proba(features)[0][1]
+        # prob = model.predict_proba(features)[0][1]
+        proba = model.predict_proba(features)[0]
+        prob = max(proba)
 
         reasons = []
 
