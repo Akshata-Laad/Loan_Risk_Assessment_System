@@ -37,6 +37,7 @@ function LoanForm() {
       });
 
       const data = await response.json();
+      console.log("API RESPONSE:", data);
       navigate("/result", { state: data });
 
     } catch (error) {

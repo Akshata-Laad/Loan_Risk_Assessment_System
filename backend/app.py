@@ -12,13 +12,6 @@ import pandas as pd
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": ["http://localhost:3000"]}})
 
-# @app.after_request
-# def after_request(response):
-#     response.headers["Access-Control-Allow-Origin"] = "*"
-#     response.headers["Access-Control-Allow-Headers"] = "*"
-#     response.headers["Access-Control-Allow-Methods"] = "*"
-#     return response
-
 model = joblib.load("loan_model.pkl")
 
 
@@ -68,8 +61,6 @@ def predict():
             print("========================================")
 
         prob = model.predict_proba(features)[0][1]
-        # proba = model.predict_proba(features)[0]
-        # prob = max(proba)
 
         reasons = []
 

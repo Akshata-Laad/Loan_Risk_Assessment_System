@@ -1,10 +1,19 @@
 const EmploymentDetails = ({ formData, setFormData }) => {
 
   const handleChange = (e) => {
-    setFormData({
+    const { name, value } = e.target;
+
+    let updatedData = {
       ...formData,
-      [e.target.name]: e.target.value
-    });
+      [name]: value
+    };
+
+    // 👇 YAHAN ADD KARNA HAI
+    if (name === "Employment_Status" && value === "Unemployed") {
+      updatedData.Employer_Category = "None";
+    }
+
+    setFormData(updatedData);
   };
 
   return (
