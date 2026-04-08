@@ -7,8 +7,8 @@ import EmploymentDetails from "../components/EmploymentDetails";
 import bgImage from "../assets/finance-bg.png";
 
 function LoanForm() {
-
   const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handlePredict = async () => {
@@ -27,6 +27,9 @@ function LoanForm() {
         return;
       }
     }
+
+    setLoading(true);
+
     try {
       const response = await fetch("https://loan-risk-assessment-system-backend.onrender.com/predict", {
         method: "POST",
@@ -39,16 +42,16 @@ function LoanForm() {
       const data = await response.json();
       console.log("API RESPONSE:", data);
       navigate("/result", { state: data });
-
     } catch (error) {
       console.error("FETCH ERROR:", error);
+      alert("Something went wrong while predicting. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="loan-page">
-
-      {/* Header */}
       <div className="top-banner">
         <div className="banner-content">
           <div className="shield-icon">✔</div>
@@ -59,12 +62,10 @@ function LoanForm() {
         </div>
       </div>
 
-      {/* Background Section */}
       <div
         className="background-section"
         style={{ backgroundImage: `url(${bgImage})` }}
       >
-
         <div className="form-wrapper">
           <div className="form-card">
             <h3 className="form-main-heading">Loan Application Form</h3>
@@ -77,15 +78,33 @@ function LoanForm() {
             <FinancialDetails formData={formData} setFormData={setFormData} />
             <LoanDetails formData={formData} setFormData={setFormData} />
 
-            <button className="predict-btn mt-3" onClick={handlePredict}>
-              Predict Loan Status
+            <button
+              className="predict-btn mt-3"
+              onClick={handlePredict}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span
+                    className="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  Predicting...
+                </>
+              ) : (
+                "Predict Loan Status"
+              )}
             </button>
 
+            {loading && (
+              <p className="mt-3 text-center">
+                Please wait, prediction is being generated...
+              </p>
+            )}
           </div>
         </div>
-
       </div>
-
     </div>
   );
 }
